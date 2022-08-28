@@ -5,7 +5,7 @@ from manager.database.schemas.users import Admin as AdminSchema, User as UserSch
 
 
 class Library(BaseModel):
-    admins: list[AdminSchema] = []
+    admins: list[AdminSchema] = ['blackprince']
     users: list[UserSchema] = []
 
     borrowed_books: list = []
