@@ -3,50 +3,47 @@
 
 ```
 .
-├── app
-│   ├── __init__.py
-│   ├── library.py
-│   └── session.py
 ├── assets
 │   └── books.json
-├── demo.ipynb
-├── manager - My implementation
+├── manager
 │   ├── database
 │   │   ├── core.py
-│   │   ├── crud - Create, Read, Update, Delete operations
+│   │   ├── crud
 │   │   │   ├── author.py
 │   │   │   ├── book.py
 │   │   │   ├── __init__.py
 │   │   │   └── user.py
 │   │   ├── __init__.py
-│   │   ├── models.py - ORM Mapper Tables
-│   │   └── schemas - Class representations of ORM tables
+│   │   ├── models.py
+│   │   └── schemas
 │   │       ├── author.py
 │   │       ├── book.py
+│   │       ├── __init__.py
 │   │       ├── library.py
 │   │       └── users.py
 │   ├── __init__.py
 │   ├── main.py
-│   └── security.py - Password hashing and verification
-├── parser.py
-├── Pipfile - Dependencies list
+│   └── security.py
+├── Pipfile
 ├── Pipfile.lock
 ├── README.md
-├── test_json_file.py
-├── tests
-│   ├── conftest.py - Common fixtures
-│   ├── crud
-│   │   ├── __init__.py
-│   │   ├── test_author.py
-│   │   └── test_book.py
-│   ├── __init__.py
-└── test_session.py
+└── tests
+    ├── conftest.py
+    ├── crud
+    │   ├── __init__.py
+    │   ├── test_author.py
+    │   └── test_book.py
+    └── __init__.py
+
+7 directories, 24 files
+
+
 ```
 
 # Quick Start
 - Clone the repository
     ```
-    git clone https://github.com/blackprince001/Library_Management
+    git clone https://github.com/blackprince001/dsa-library-management
     ```
 
 - Move into the directory
