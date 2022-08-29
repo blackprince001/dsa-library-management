@@ -48,7 +48,7 @@
 
 - Move into the directory
     ```
-    cd Library_Management
+    cd dsa-library-management
     ```
 
 - Set up a virtual environment with [Pipenv](https://pipenv.pypa.io/en/latest/index.html) and install the project dependencies (from the `Pipfile.lock` file to ensure deterministic builds)
