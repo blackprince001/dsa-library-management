@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 
 from manager.database.schemas.book import Book as BookSchema
-from manager.database.schemas.users import Admin as AdminSchema, User as UserSchema
+from manager.database.schemas.users import Admin as AdminSchema, Student as UserSchema
 
 
 class Library(BaseModel):
-    admins: list[AdminSchema] = ['blackprince']
+    admins: list[AdminSchema] = []
     users: list[UserSchema] = []
 
     borrowed_books: list = []

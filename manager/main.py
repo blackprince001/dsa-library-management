@@ -9,7 +9,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from manager.database.core import engine
-from manager.database.crud.user import (
+from manager.database.crud.student import (
     create_user,
     get_admins,
     get_user_by_username,
@@ -21,8 +21,8 @@ from manager.database.schemas.library import Library
 from manager.database.schemas.users import (
     Admin,
     AdminCreate,
-    UserCreate,
-    User as UserSchema,
+    StudentCreate,
+    Student as UserSchema,
 )
 
 from manager.security import Password
@@ -53,6 +53,7 @@ def view_library(user: UserSchema):
             "2. View borrowed books",
             "3. Borrow a book",
             "4. Return a book",
+            "5. Quit"
         )
     )
 
@@ -147,13 +148,14 @@ def sign_up():
         try:
             create_user(
                 db=db,
-                user=UserCreate(
+                user=StudentCreate(
                     username=username,
-                    password=Password.hash(password),
+                    password=password,
                 ),
             )
         except IntegrityError:
             print("Username already registered")
+            sys.exit()
 
         print("Account created successfully")
 

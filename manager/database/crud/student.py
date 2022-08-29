@@ -2,11 +2,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from manager.database.models import User as UserModel
-from manager.database.schemas.users import UserCreate
+from manager.database.schemas.users import StudentCreate
 from manager.security import Password
 
 
-def create_user(db: Session, user: UserCreate) -> UserModel:
+def create_user(db: Session, user: StudentCreate) -> UserModel:
     db_user = UserModel(**user.dict())
 
     db_user.password = Password.hash(user.password)

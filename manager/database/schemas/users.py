@@ -7,11 +7,11 @@ class UserBase(BaseModel):
     username: str
 
 
-class UserCreate(UserBase):
+class StudentCreate(UserBase):
     password: str
 
 
-class User(UserBase):
+class Student(UserBase):
     borrowed_books: list = []
 
     class Config:
@@ -25,7 +25,7 @@ class User(UserBase):
         self.borrowed_books.remove(book)
 
 
-class AdminCreate(UserCreate):
+class AdminCreate(StudentCreate):
     is_admin: bool = True
 
 
