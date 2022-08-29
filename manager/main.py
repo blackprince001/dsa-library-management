@@ -45,32 +45,37 @@ def view_library(user: UserSchema):
         books=get_books(db=db),
     )
 
-    print(f"Hello, user: {user.username}")
-
-    options = "\n".join(
-        (
-            "1. View available books",
-            "2. View borrowed books",
-            "3. Borrow a book",
-            "4. Return a book",
-            "5. Quit"
+    print(f"\nHello, user: {user.username}")
+    
+    while True:
+        
+        print("\n", "*"*30)
+        options = "\n".join(
+            (
+                "1. View available books",
+                "2. View borrowed books",
+                "3. Borrow a book",
+                "4. Return a book",
+                "5. Logout"
+            )
         )
-    )
 
-    print(options)
-    choice = input("What to do?: ")
+        print(options)
+        choice = input("What to do?: ")
 
-    match choice:
-        case "1":
-            print(library.books)
-        case "2":
-            print(user.borrowed_books)
-        case "3":
-            print("... Not implemented...")
-        case "4":
-            print("... Not implemented...")
-        case _:
-            print("Invalid entry")
+        match choice:
+            case "1":
+                print(f"\nLoading Book Catalog:\n{library.books}")
+            case "2":
+                print(f"\nThese are the books you have Borrowed:\n{user.borrowed_books}")
+            case "3":
+                print("... Not implemented...")
+            case "4":
+                print("... Not implemented...")
+            case "5":
+                show_main_menu()
+            case _:
+                print("Invalid entry, try again!")
 
 
 def view_library_as_admin(admin: Admin):
@@ -115,7 +120,7 @@ def view_library_as_admin(admin: Admin):
 
 
 def login():
-    print("Logging in")
+    print("\nLogging in\n")
     username = input("Username: ")
     password = getpass()
 
@@ -163,7 +168,7 @@ def sign_up():
 
 
 def show_main_menu():
-    print("Welcome")
+    print("\nWelcome")
 
     options = "\n".join(
         (
