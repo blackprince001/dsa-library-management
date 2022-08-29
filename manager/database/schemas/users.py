@@ -7,7 +7,7 @@ class UserBase(BaseModel):
     username: str
 
 
-class StudentCreate(UserBase):
+class UserCreate(UserBase):
     password: str
 
 
@@ -25,7 +25,7 @@ class Student(UserBase):
         self.borrowed_books.remove(book)
 
 
-class AdminCreate(StudentCreate):
+class AdminCreate(UserCreate):
     is_admin: bool = True
 
 
