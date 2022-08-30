@@ -2,40 +2,43 @@
 
 
 ```
+
 .
 ├── assets
-│   └── books.json
+│   └── books.json
+├── library.db
 ├── manager
-│   ├── database
-│   │   ├── core.py
-│   │   ├── crud
-│   │   │   ├── author.py
-│   │   │   ├── book.py
-│   │   │   ├── __init__.py
-│   │   │   └── user.py
-│   │   ├── __init__.py
-│   │   ├── models.py
-│   │   └── schemas
-│   │       ├── author.py
-│   │       ├── book.py
-│   │       ├── __init__.py
-│   │       ├── library.py
-│   │       └── users.py
-│   ├── __init__.py
-│   ├── main.py
-│   └── security.py
+│   ├── database
+│   │   ├── core.py
+│   │   ├── crud
+│   │   │   ├── author.py
+│   │   │   ├── book.py
+│   │   │   ├── __init__.py
+│   │   │   └── user.py
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   └── schemas
+│   │       ├── author.py
+│   │       ├── book.py
+│   │       ├── __init__.py
+│   │       ├── library.py
+│   │       └── users.py
+│   ├── __init__.py
+│   ├── main.py
+│   └── security.py
 ├── Pipfile
 ├── Pipfile.lock
 ├── README.md
+├── requirements.txt
 └── tests
     ├── conftest.py
     ├── crud
-    │   ├── __init__.py
-    │   ├── test_author.py
-    │   └── test_book.py
+    │   ├── __init__.py
+    │   ├── test_author.py
+    │   └── test_book.py
     └── __init__.py
 
-7 directories, 24 files
+7 directories, 26 files
 
 
 ```
