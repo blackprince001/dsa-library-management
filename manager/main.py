@@ -12,14 +12,19 @@ from manager.database.schemas.users import (
 )
 from manager.database.schemas.library import Library
 from manager.database.crud.book import get_books
-from manager.database.models import Base
-from manager.database.crud.student import (
+from manager.database.models import (
+    Base,
+    User as UserModel
+)
+from manager.database.crud.user import (
     create_user,
     get_admins,
     get_user_by_username,
     get_users,
+    get_borrowed_books_admin
 )
 from manager.database.core import engine
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from getpass import getpass
@@ -41,8 +46,9 @@ GROUP_MEMBERS = {
 def d_create_default_admins():
     db = get_db()
 
-    for admin, password in GROUP_MEMBERS.items():
-        create_user(db=db, user=AdminCreate(username=admin, password=password))
+    if not db.scalars(select(UserModel).where(UserModel.is_admin == True)).all():
+        for admin, password in GROUP_MEMBERS.items():
+            create_user(db=db, user=AdminCreate(username=admin, password=password))
 
 # snippet ends here!
 
@@ -56,7 +62,7 @@ def view_library(user: UserSchema):
     db = get_db()
 
     library = Library(
-        admins=get_admins(db=db),
+        admins=[],
         users=get_users(db=db),
         books=get_books(db=db),
     )
@@ -102,6 +108,7 @@ def view_library_as_admin(admin: Admin):
         admins=get_admins(db=db),
         users=get_users(db=db),
         books=get_books(db=db),
+        borrowed_books=get_borrowed_books_admin(db=db)
     )
 
     print(f"\nHello, admin: {admin.username}\n")
@@ -218,5 +225,7 @@ def show_main_menu():
 
 
 if __name__ == "__main__":
+   
     d_create_default_admins()
+    
     show_main_menu()
