@@ -193,26 +193,28 @@ def sign_up():
 def show_main_menu():
     print("\nWelcome")
 
-    options = "\n".join(
-        (
-            "1. Log in",
-            "2. Sign up",
-            "3. Quit",
-        )
-    )
-    print(options)
-    choice = input("What to do?: ")
+    while True:
 
-    match choice:
-        case "1":
-            login()
-        case "2":
-            sign_up()
-        case "3":
-            sys.exit()
-        case _:
-            print("Invalid entry")
-            sys.exit()
+        options = "\n".join(
+            (
+                "1. Log in",
+                "2. Sign up",
+                "3. Quit",
+            )
+        )
+        print(options)
+        choice = input("What to do?: ")
+
+        match choice:
+            case "1":
+                login()
+            case "2":
+                sign_up()
+            case "3":
+                sys.exit()
+            case _:
+                print("Invalid entry")
+                show_main_menu()
 
 
 if __name__ == "__main__":
