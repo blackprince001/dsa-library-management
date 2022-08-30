@@ -2,6 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from manager.database.models import User as UserModel
+from manager.database.models import BorrowedBook as BorrowedBookModel 
 from manager.database.schemas.users import UserCreate
 from manager.security import Password
 
@@ -32,3 +33,6 @@ def get_user_by_id(db: Session, user_id: int) -> UserModel | None:
 
 def get_user_by_username(db: Session, username: str) -> UserModel | None:
     return db.scalar(select(UserModel).where(UserModel.username == username))
+
+def get_borrowed_books_admin(db: Session) -> list[BorrowedBookModel] | list:
+    return db.scalars(select(BorrowedBookModel).where(BorrowedBookModel != None)).all()
