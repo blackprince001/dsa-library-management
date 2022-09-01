@@ -1,4 +1,4 @@
-sqlalchemy = "1.4"
-pydantic = "*"
-passlib = "*"
-bcrypt = "*"
+sqlalchemy
+pydantic
+passlib
+bcrypt
