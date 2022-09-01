@@ -18,3 +18,17 @@ class Book(BookBase):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+
+class BorrowedBookBase(BaseModel):
+    pass
+
+
+class BorrowedBookCreate(BorrowedBookBase):
+    pass
+
+
+class BorrowedBook(BorrowedBookBase):
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
