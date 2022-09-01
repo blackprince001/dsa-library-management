@@ -4,7 +4,7 @@ This repo serves as a presentation demo for my end of semester Data Structures &
 
 ### Structure of the project
 
-```
+```bash
 
 .
 ├── books.json
@@ -34,6 +34,9 @@ This repo serves as a presentation demo for my end of semester Data Structures &
 │       └── __init__.py
 ├── Pipfile
 ├── Pipfile.lock
+├── presentation_files
+│   ├── demo.ipynb
+│   └── demo.slides.html
 ├── README.md
 ├── requirements.txt
 └── tests
@@ -45,7 +48,7 @@ This repo serves as a presentation demo for my end of semester Data Structures &
     │   └── test_load_book_metadata.py
     └── __init__.py
 
-7 directories, 30 files
+8 directories, 32 files
 
 ```
 
