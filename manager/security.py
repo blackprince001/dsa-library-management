@@ -4,6 +4,7 @@ from passlib.context import CryptContext
 class Password:
     """A Password Class that provides a static method
     to verify a password and a static method to hash a password"""
+
     context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     @staticmethod
