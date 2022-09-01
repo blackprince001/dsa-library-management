@@ -11,7 +11,7 @@ class UserCreate(UserBase):
     password: str
 
 
-class Student(UserBase):
+class User(UserBase):
     borrowed_books: list = []
 
     class Config:
@@ -20,9 +20,11 @@ class Student(UserBase):
 
     def borrow_book(self, book: BookSchema):
         self.borrowed_books.append(book)
+        print(f"{book} has been borrowed!")
 
     def return_book(self, book: BookSchema):
         self.borrowed_books.remove(book)
+        print(f"{book} has been returned!")
 
 
 class AdminCreate(UserCreate):
