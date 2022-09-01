@@ -7,6 +7,14 @@ from ..schemas.book import BookCreate
 
 
 def create_book(db: Session, book: BookCreate, author_ids: list[int]) -> BookModel:
+    """
+    Returns a book instance after adding to the database.
+        @param `db` - accepts the database Session engine
+        @param `book` - a book
+        @param `author_ids` - a list of author ids from a the database. 
+                            do note that before you can create a book, the authors must already exist.
+        more at ../tests/crud/test_book.py
+    """
     authors = set()
 
     for author_id in author_ids:
@@ -31,5 +39,11 @@ def create_book(db: Session, book: BookCreate, author_ids: list[int]) -> BookMod
     return db_book
 
 
-def get_books(db: Session) -> list[BookModel]:
+def get_book_by_name(db: Session, keyword: str) -> list[BookModel] | list:
+    """Returns a list of Book with Titles that have a specfic @param `keyword` in it."""
+    return db.scalars(select(BookModel).where(keyword in BookModel.title))
+
+
+def get_books(db: Session) -> list[BookModel] | list:
+    """Returns a list of all books from the Book Column in the database."""
     return db.scalars(select(BookModel)).all()
