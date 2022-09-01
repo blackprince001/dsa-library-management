@@ -49,6 +49,8 @@ class Book(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String, nullable=False)
+    pagecount = Column(Integer, nullable=False)
+    description = Column(String, nullable=False)
 
     authors: list[AuthorBook] = relationship(
         "AuthorBook",
@@ -64,9 +66,11 @@ class Book(Base):
 
     def __repr__(self):
         return (
-            f"Book(id={self.id!r}, "
-            f"title={self.title!r}), "
-            f"authors={[author_book.author for author_book in self.authors]}"
+            f"Book(id={self.id!r}\n"
+            f"title={self.title!r})\n "
+            f"pageCount={self.pagecount!r}\n "
+            f"description={self.description!r}\n "
+            f"authors={[print(author_book.author + ',') for author_book in self.authors]}"
         )
 
 
