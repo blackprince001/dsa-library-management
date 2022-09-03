@@ -3,6 +3,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from manager.database.crud.author import create_author
+from manager.database.schemas.book import BookCreate
+from manager.database.schemas.author import AuthorCreate
 from manager.security import Password
 from manager.database.schemas.users import (
     Admin,
@@ -11,11 +14,13 @@ from manager.database.schemas.users import (
     User as UserSchema,
 )
 from manager.database.schemas.library import Library
-from manager.database.crud.book import (
-    get_book_by_name,
-    get_books
+from manager.database.crud.book import create_book, get_book_by_name, get_books
+from manager.database.models import (
+    Base,
+    Book as BookModel,
+    User as UserModel,
+    Author as AuthorModel,
 )
-from manager.database.models import Base, User as UserModel
 from manager.database.crud.user import (
     create_user,
     get_admins,
@@ -28,6 +33,7 @@ from manager.database.crud.borrowed_book import (
     get_borrowed_books,
     get_borrowed_books_admin,
 )
+from manager.utils.book_metadata_parser import load_metadata
 from manager.database.core import engine
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -41,20 +47,51 @@ Base.metadata.create_all(bind=engine)
 GROUP_MEMBERS = {
     "prince": "admin1",
     "richard": "admin2",
-    "elorm": "admin3",
+    "elom": "admin3",
     "emmanuel": "admin4",
     "henry": "admin5",
     "joshua": "admin6",
+    "jesse": "admin7",
+    "aidoo": "admin8",
 }
 
 
-def d_create_default_admins():
+def d_create_admins():
     db = get_db()
 
+    # check if there are data elements in User Column before adding them
     if not db.scalars(select(UserModel).where(UserModel.is_admin == True)).all():
         for admin, password in GROUP_MEMBERS.items():
             create_user(db=db, user=AdminCreate(username=admin, password=password))
 
+
+def d_load_books():
+    db = get_db()
+    print("LOADING SYSTEM")
+    # assigns the path location for the books.json to @var raw_file
+    raw_file = Path(__file__).resolve().parent.parent / "books.json"
+
+    # load the list collection of data tuples into @param books
+    books = load_metadata(raw_file)
+
+    if not (
+        db.scalars(select(BookModel)).all()
+        and db.scalars(select(AuthorModel)).all()
+    ):  # check if there are data elements in each Column of Authors and Books
+
+        for data in books:
+            # unpack the tuples to and create Authors and Books.
+            authors, title, page_count, desc = data
+
+            db_authors = list()
+            for writer in authors:
+                db_authors.append(create_author(db=db, author=AuthorCreate(name=writer)))
+
+            create_book(
+                db=db,
+                book=BookCreate(title=title, pagecount=page_count, description=desc),
+                author_ids=[author.id for author in db_authors],
+            )
 
 # snippet ends here!
 
@@ -84,7 +121,8 @@ def view_library(user: UserSchema):
                 "2. View borrowed books",
                 "3. Borrow a book",
                 "4. Return a book",
-                "5. Logout",
+                "5. Search for a book",
+                "6. Logout",
             )
         )
 
@@ -104,6 +142,11 @@ def view_library(user: UserSchema):
             case "4":
                 print("... Not implemented...")
             case "5":
+                search = input("Type the name of the book: ")
+                res = get_book_by_name(db=db, keyword=search)
+                for count, book in enumerate(res, start=1):
+                    print(count, book)
+            case "6":
                 show_main_menu()
             case _:
                 print("Invalid entry, try again!")
@@ -234,6 +277,6 @@ def show_main_menu():
 
 if __name__ == "__main__":
 
-    d_create_default_admins()
-
+    d_create_admins()
+    d_load_books()
     show_main_menu()
