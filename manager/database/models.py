@@ -26,7 +26,7 @@ class Author(Base):
 
     def __repr__(self):
         return (
-            f"Author(id={self.id!r}, "
+            f"Author(id={self.id!r}"
             f"name={self.name!r}"
         )
 
