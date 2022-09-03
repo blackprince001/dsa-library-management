@@ -2,8 +2,7 @@ from pydantic import BaseModel
 
 
 class AuthorBase(BaseModel):
-    first_name: str
-    last_name: str
+    name: str
 
 
 class AuthorCreate(AuthorBase):
