@@ -6,12 +6,16 @@ from ..models import Author as AuthorModel
 from ..schemas.book import BookCreate
 
 
-def create_book(db: Session, book: BookCreate, author_ids: list[int]) -> BookModel:
+def create_book(
+    db: Session,
+    book: BookCreate,
+    author_ids: list[int],
+) -> BookModel:
     """
     Returns a book instance after adding to the database.
         @param `db` - accepts the database Session engine
         @param `book` - a book
-        @param `author_ids` - a list of author ids from a the database. 
+        @param `author_ids` - a list of author ids from a the database.
                             do note that before you can create a book, the authors must already exist.
         more at ../tests/crud/test_book.py
     """
