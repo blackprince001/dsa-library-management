@@ -9,7 +9,7 @@ from manager.database.crud.author import (
 def test_create_author(db, author):
     db_author = create_author(db=db, author=author)
 
-    assert db_author.first_name == author.first_name
+    assert db_author.name == author.name
     assert db_author.id == 1
 
 
@@ -18,7 +18,7 @@ def test_get_author_by_id(db, author):
 
     assert db_author is not None
 
-    assert db_author.first_name == author.first_name
+    assert db_author.name == author.name
 
 
 def test_get_authors(db):

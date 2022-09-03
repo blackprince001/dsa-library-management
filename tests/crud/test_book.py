@@ -9,17 +9,11 @@ from manager.database.schemas.author import AuthorCreate
 def test_create_book(db, book):
     first = create_author(
         db=db,
-        author=AuthorCreate(
-            first_name="King",
-            last_name="Phyte",
-        ),
+        author=AuthorCreate(name="King Sark"),
     )
     second = create_author(
         db=db,
-        author=AuthorCreate(
-            first_name="Black",
-            last_name="Prince",
-        ),
+        author=AuthorCreate(name="blackprince"),
     )
 
     db_book = create_book(db=db, book=book, author_ids=[first.id, second.id])

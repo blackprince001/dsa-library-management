@@ -19,7 +19,7 @@ def engine():
 
 @pytest.fixture(scope="session")
 def author():
-    return AuthorCreate(first_name="King", last_name="Phyte")
+    return AuthorCreate(name='King Sark')
 
 
 @pytest.fixture(scope="session")
