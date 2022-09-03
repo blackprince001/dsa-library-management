@@ -5,6 +5,8 @@ from manager.database.models import Author as AuthorModel
 
 class BookBase(BaseModel):
     title: str
+    pagecount: int
+    description: str
 
 
 class BookCreate(BookBase):
@@ -12,7 +14,6 @@ class BookCreate(BookBase):
 
 
 class Book(BookBase):
-    title: str
     authors: list[AuthorModel] = []
 
     class Config:
