@@ -42,10 +42,11 @@ This repo serves as a presentation demo for my end of semester Data Structures &
     │   ├── __init__.py
     │   ├── test_author.py
     │   ├── test_book.py
+    │   ├── test_borrowed_book.py
     │   └── test_load_book_metadata.py
     └── __init__.py
 
-7 directories, 30 files
+7 directories, 31 files
 
 ```
 
