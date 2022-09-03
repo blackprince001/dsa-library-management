@@ -18,8 +18,7 @@ class Author(Base):
     __tablename__ = "author"
 
     id = Column(Integer, primary_key=True)
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=False)
+    name = Column(String, nullable=False)
 
     books: list[AuthorBook] = relationship(
         "AuthorBook", back_populates="author", lazy="selectin"
@@ -28,8 +27,7 @@ class Author(Base):
     def __repr__(self):
         return (
             f"Author(id={self.id!r}, "
-            f"first_name={self.first_name!r}, "
-            f"last_name={self.last_name!r})"
+            f"name={self.name!r}"
         )
 
 
