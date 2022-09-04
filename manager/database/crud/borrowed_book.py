@@ -5,12 +5,12 @@ from ..models import (
     BorrowedBook as BorrowedBookModel,
     User as UserModel,
 )
-from ..schemas.book import BookCreate, BorrowedBookCreate
+from ..schemas.book import BorrowedBookCreate
 
 
-def create_borrowed_book(db: Session, book: BookCreate) -> BorrowedBookModel:
+def create_borrowed_book(db: Session, borrow_book: BorrowedBookCreate) -> BorrowedBookModel:
     """Creates a book and adds the Book to the BorrowedBook Table Database."""
-    db_borrowed_book = BorrowedBookModel(**book.dict())
+    db_borrowed_book = BorrowedBookModel(**borrow_book.dict())
 
     db.add(db_borrowed_book)
     db.commit()
@@ -26,8 +26,6 @@ def remove_borrowed_book(db: Session, borrowed_book: BorrowedBookCreate) -> None
     db.delete(db_borrowed_book)
     db.commit()
     db.refresh()
-
-    print(f"{db_borrowed_book} has been removed from borrowed books.")
 
 
 def get_borrowed_books_admin(db: Session) -> list[BorrowedBookModel] | list:
