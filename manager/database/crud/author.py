@@ -7,13 +7,13 @@ from ..schemas.author import AuthorCreate
 
 def create_author(db: Session, author: AuthorCreate) -> AuthorModel | None:
     """Creates an Author and adds Author to Author Table Database."""
-    db_book = AuthorModel(**author.dict())
+    db_author = AuthorModel(**author.dict())
 
-    db.add(db_book)
+    db.add(db_author)
     db.commit()
-    db.refresh(db_book)
+    db.refresh(db_author)
 
-    return db_book
+    return db_author
 
 
 def get_author_by_id(db: Session, author_id: int) -> AuthorModel | None:
