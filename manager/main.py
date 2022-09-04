@@ -1,5 +1,3 @@
-from ast import Pass
-from os import remove
 import sys
 from pathlib import Path
 
@@ -78,31 +76,31 @@ def d_load_books():
     # assigns the path location for the books.json to @var raw_file
     raw_file = Path(__file__).resolve().parent.parent / "books.json"
 
-    # load the list collection of data tuples into @param books
+    # load the list collection of data tuples into @param `books`
     books = load_metadata(raw_file)
 
     if not (
-        db.scalars(select(BookModel)).all() and db.scalars(select(AuthorModel)).all()
-    ):  # check if there are data elements in each Column of Authors and Books
+        db.get(AuthorModel, 1)
+    ):  # check if there are data elements at the top in each Column of Author Table and Book Table
 
-        for data in books:
+        for (authors, title, page_count, desc) in books:
             # unpack the tuples to and create Authors and Books.
-            authors, title, page_count, desc = data
-
-            db_authors = list()
-            for writer in authors:
-                db_authors.append(
-                    create_author(db=db, author=AuthorCreate(name=writer))
-                )
 
             create_book(
                 db=db,
                 book=BookCreate(title=title, pagecount=page_count, description=desc),
-                author_ids=[author.id for author in db_authors],
+                author_ids=[
+                    author.id
+                    for author in [
+                        create_author(db=db, author=AuthorCreate(name=writer))
+                        for writer in authors
+                    ]
+                ],
             )
 
 
 # snippet ends here!
+
 
 def get_db():
     with Session(engine) as session:
@@ -130,8 +128,7 @@ def view_library(user: UserSchema):
                 "3. Borrow a book",
                 "4. Return a book",
                 "5. Read a book",
-                "6. Search for a book",
-                "7. Logout",
+                "6. Logout",
             )
         )
 
@@ -140,8 +137,8 @@ def view_library(user: UserSchema):
 
         match choice:
             case "1":  # print all the books in the library
-               for book in library.books:
-                print(book.title)
+                for book in library.books:
+                    print(book.title)
 
             case "2":  # prints the books by a user
                 print(
@@ -190,21 +187,22 @@ def view_library(user: UserSchema):
                     if book.title == search:
                         book_found = book
 
+                print("\n\n")
                 display_book_content(db=db, book=book_found)
 
+            # case "6":
+            #     search = input("What book do you want to search for: ")
+            #     res = get_book_by_name(db, keyword=search)
+
+            #     if not res:
+            #         print
+
+            #     if res:
+            #         print(f"Found books with the search '{search}' :\n")
+            #         for count, book in enumerate(res, start=1):
+            #             print(f"{count} - {book}")
+
             case "6":
-                search = input("What book do you want to search for: ")
-                res = get_book_by_name(db, keyword=search)
-
-                if not res:
-                    print
-
-                if res:
-                    print(f"Found books with the search '{search}' :\n")
-                    for count, book in enumerate(res, start=1):
-                        print(f"{count} - {book}")
-
-            case "7":
                 show_main_menu()
 
             case _:
