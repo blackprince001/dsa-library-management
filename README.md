@@ -2,6 +2,10 @@
 
 This repo serves as a presentation demo for my end of semester Data Structures & Algorithms class Project. All future commits will only contain the relevant additions to scale this to a working GUI application. If you want to contribute to that, make a pull request, and let's create magic.
 
+# Structure of Database
+Needs to be updated!
+![database structure](assets/database_structure.jpg) 
+
 ### Structure of the project
 
 ```bash
