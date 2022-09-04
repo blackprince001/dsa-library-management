@@ -51,3 +51,8 @@ def get_book_by_name(db: Session, keyword: str) -> list[BookModel] | list:
 def get_books(db: Session) -> list[BookModel] | list:
     """Returns a list of all books from the Book Column in the database."""
     return db.scalars(select(BookModel)).all()
+
+
+def display_book_content(db: Session, book: BookCreate) -> None:
+    """Outputs the data of a book."""
+    print(f"Book Name: {book.title}\n", f"Pages: {book.pagecount}\n", f"Blub: {book.description}")
