@@ -104,7 +104,6 @@ def d_load_books():
 
 # snippet ends here!
 
-
 def get_db():
     with Session(engine) as session:
         return session
