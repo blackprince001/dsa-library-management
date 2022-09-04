@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from manager.database.models import Author as AuthorModel
 
 
+
 class BookBase(BaseModel):
     title: str
     pagecount: int
@@ -22,7 +23,8 @@ class Book(BookBase):
 
 
 class BorrowedBookBase(BaseModel):
-    pass
+    user_id: int
+    book_id: int
 
 
 class BorrowedBookCreate(BorrowedBookBase):
