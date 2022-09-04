@@ -55,4 +55,4 @@ def get_books(db: Session) -> list[BookModel] | list:
 
 def display_book_content(db: Session, book: BookCreate) -> None:
     """Outputs the data of a book."""
-    print(f"Book Name: {book.title}\n", f"Pages: {book.pagecount}\n", f"Blub: {book.description}")
+    print(f"\nBook Name: {book.title}\nPages: {book.pagecount}\nBlub: {book.description}")
