@@ -5,6 +5,12 @@ Base = declarative_base()
 
 
 class AuthorBook(Base):
+    """
+    An Author Book relational Table that binds an `Author` Table to a `Book` Table using ids.
+    This has a pattern for many-to-many relationships between data Models.
+    It has a `author_id` column, and a `book_id` column.
+    """
+
     __tablename__ = "author_book"
 
     author_id = Column(ForeignKey("author.id"), primary_key=True)
@@ -15,6 +21,11 @@ class AuthorBook(Base):
 
 
 class Author(Base):
+    """
+    An Author Model Table that has an `id` column, a `name` column, and has a list of related `books`.
+    It has a one-to-many relationship with the `Author Book` Table.
+    """
+
     __tablename__ = "author"
 
     id = Column(Integer, primary_key=True)
@@ -25,13 +36,16 @@ class Author(Base):
     )
 
     def __repr__(self):
-        return (
-            f"Author(id={self.id!r}"
-            f"name={self.name!r}"
-        )
+        return f"Author(id={self.id!r}" f"name={self.name!r}"
 
 
 class BorrowedBook(Base):
+    """
+    A Borrowed Book relational Table that binds a `User` Table to a `Book` Table using ids.
+    This has common pattern for many-to-many relationships between data Models.
+    It has a `user_id` column, and a `book_id` column.
+    """
+
     __tablename__ = "borrowed_book"
 
     id = Column(Integer, primary_key=True)
@@ -43,6 +57,11 @@ class BorrowedBook(Base):
 
 
 class Book(Base):
+    """
+    A Book Table that has a one-to-many relationship with `Borrowed Book` Table and `Authors` Table.
+    It has an `id` column, a `title` column, a `pagecount` column, and a `description` column.
+    """
+
     __tablename__ = "book"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -73,6 +92,11 @@ class Book(Base):
 
 
 class User(Base):
+    """
+    A User Table that has an `id` column, a `username` column, a `password` and `is_admin` columns.
+    It has a one-to-one relationship with `Borrowed Book` Table.
+    """
+
     __tablename__ = "user"
 
     id = Column(Integer, primary_key=True)
