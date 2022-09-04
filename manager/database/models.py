@@ -87,7 +87,6 @@ class Book(Base):
             f"title={self.title!r})\n "
             f"pageCount={self.pagecount!r}\n "
             f"description={self.description!r}\n "
-            f"authors={[print(author_book.author + ',') for author_book in self.authors]}"
         )
 
 
