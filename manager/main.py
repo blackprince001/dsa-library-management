@@ -1,10 +1,12 @@
+from ast import Pass
+from os import remove
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from manager.database.crud.author import create_author
-from manager.database.schemas.book import BookCreate
+from manager.database.schemas.book import BookCreate, BorrowedBookCreate
 from manager.database.schemas.author import AuthorCreate
 from manager.security import Password
 from manager.database.schemas.users import (
@@ -14,7 +16,12 @@ from manager.database.schemas.users import (
     User as UserSchema,
 )
 from manager.database.schemas.library import Library
-from manager.database.crud.book import create_book, get_book_by_name, get_books
+from manager.database.crud.book import (
+    create_book,
+    get_book_by_name,
+    get_books,
+    display_book_content,
+)
 from manager.database.models import (
     Base,
     Book as BookModel,
@@ -75,8 +82,7 @@ def d_load_books():
     books = load_metadata(raw_file)
 
     if not (
-        db.scalars(select(BookModel)).all()
-        and db.scalars(select(AuthorModel)).all()
+        db.scalars(select(BookModel)).all() and db.scalars(select(AuthorModel)).all()
     ):  # check if there are data elements in each Column of Authors and Books
 
         for data in books:
@@ -85,13 +91,16 @@ def d_load_books():
 
             db_authors = list()
             for writer in authors:
-                db_authors.append(create_author(db=db, author=AuthorCreate(name=writer)))
+                db_authors.append(
+                    create_author(db=db, author=AuthorCreate(name=writer))
+                )
 
             create_book(
                 db=db,
                 book=BookCreate(title=title, pagecount=page_count, description=desc),
                 author_ids=[author.id for author in db_authors],
             )
+
 
 # snippet ends here!
 
@@ -104,15 +113,15 @@ def get_db():
 def view_library(user: UserSchema):
     db = get_db()
 
-    library = Library(
-        admins=[],
-        users=get_users(db=db),
-        books=get_books(db=db),
-    )
-
     print(f"\nHello, user: {user.username}\n")
 
     while True:
+        library = Library(
+            admins=[],
+            users=[],
+            books=get_books(db=db),
+            borrowed_books=get_borrowed_books(db=db, user_id=user.id),
+        )
 
         print("\n", "*" * 30)
         options = "\n".join(
@@ -121,8 +130,9 @@ def view_library(user: UserSchema):
                 "2. View borrowed books",
                 "3. Borrow a book",
                 "4. Return a book",
-                "5. Search for a book",
-                "6. Logout",
+                "5. Read a book",
+                "6. Search for a book",
+                "7. Logout",
             )
         )
 
@@ -130,24 +140,74 @@ def view_library(user: UserSchema):
         choice = input("What to do?: ")
 
         match choice:
-            case "1":
-                print(f"\nLoading Book Catalog:\n{library.books}")
-            case "2":
+            case "1":  # print all the books in the library
+               for book in library.books:
+                print(book.title)
+
+            case "2":  # prints the books by a user
                 print(
-                    f"\nThese are the books you have Borrowed:\n{user.borrowed_books}"
+                    f"\nThese are the books you have Borrowed:\n{library.borrowed_books}"
                 )
-            case "3":
-                title = input("What is the title of the book you wish to borrow? ")
-                # to be completed soon
-            case "4":
-                print("... Not implemented...")
-            case "5":
-                search = input("Type the name of the book: ")
+
+            case "3":  # borrow a book from the library
+                search = input("What is the name of the Book you want Borrow: ")
                 res = get_book_by_name(db=db, keyword=search)
-                for count, book in enumerate(res, start=1):
-                    print(count, book)
+
+                if res:
+                    create_borrowed_book(
+                        db,
+                        borrow_book=BorrowedBookCreate(user_id=user.id),
+                        book_id=res[0].id,
+                    )
+                    print(f"You have borrowed '{search}'")
+                else:
+                    print(f"Are you sure this '{search}' is a book?")
+
+            case "4":  # return a book to the library
+                borrowed = library.borrowed_books
+                for book in borrowed:
+                    print(f"{book.id} - {book.title}")
+
+                return_book = int(
+                    input(
+                        "Which book do you want to return (type the id of the book from the above):"
+                    )
+                )
+                remove_borrowed_book(
+                    db=db,
+                    borrowed_book=BorrowedBookCreate(
+                        user_id=user.id, book_id=return_book
+                    ),
+                )
+                print(f"Book with id {return_book} has been returned!")
+
+            case "5":  # display book blub
+                books = library.books
+
+                # this section might break if the search keyword is not worded right, but I didnt have the time to error check.
+                search = input("What is the name of the book: ")
+                book_found = None
+                for book in books:
+                    if book.title == search:
+                        book_found = book
+
+                display_book_content(db=db, book=book_found)
+
             case "6":
+                search = input("What book do you want to search for: ")
+                res = get_book_by_name(db, keyword=search)
+
+                if not res:
+                    print
+
+                if res:
+                    print(f"Found books with the search '{search}' :\n")
+                    for count, book in enumerate(res, start=1):
+                        print(f"{count} - {book}")
+
+            case "7":
                 show_main_menu()
+
             case _:
                 print("Invalid entry, try again!")
 
