@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from manager.database.models import Base
 from manager.database.schemas.author import AuthorCreate
+from manager.database.schemas.users import UserCreate
 from manager.database.schemas.book import BookCreate
 
 
@@ -19,12 +20,19 @@ def engine():
 
 @pytest.fixture(scope="session")
 def author():
-    return AuthorCreate(name='King Sark')
+    return AuthorCreate(name="King Sark")
 
 
 @pytest.fixture(scope="session")
 def book():
-    return BookCreate(title="The Lone Wolf")
+    return BookCreate(
+        title="The Lone Wolf", pagecount=12, description="This is a template book"
+    )
+
+
+@pytest.fixure(scope="session")
+def user():
+    return UserCreate(username="tallman", password="gossum")
 
 
 @pytest.fixture
