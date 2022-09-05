@@ -73,16 +73,16 @@ def d_create_admins():
 def d_load_books():
     db = get_db()
     print("LOADING SYSTEM")
-    # assigns the path location for the books.json to @var raw_file
-    raw_file = Path(__file__).resolve().parent.parent / "books.json"
-
-    # load the list collection of data tuples into @param `books`
-    books = load_metadata(raw_file)
 
     if not (
         db.get(AuthorModel, 1)
     ):  # check if there are data elements at the top in each Column of Author Table and Book Table
 
+        # assigns the path location for the books.json to @var raw_file
+        raw_file = Path(__file__).resolve().parent.parent / "books.json"
+
+        # load the list collection of data tuples into @param `books`
+        books = load_metadata(raw_file)
         for (authors, title, page_count, desc) in books:
             # unpack the tuples to and create Authors and Books.
 
@@ -103,7 +103,7 @@ def d_load_books():
 
 
 def get_db():
-    with Session(engine) as session:
+    with Session(engine, autoflush=False, autocommit=False) as session:
         return session
 
 
@@ -147,21 +147,21 @@ def view_library(user: UserSchema):
 
             case "3":  # borrow a book from the library
                 search = input("What is the name of the Book you want Borrow: ")
-                res = get_book_by_name(db=db, keyword=search)
+                book = get_book_by_name(db=db, keyword=search)
 
-                if res:
+                if book:
                     create_borrowed_book(
                         db,
-                        borrow_book=BorrowedBookCreate(user_id=user.id),
-                        book_id=res[0].id,
+                        borrow_book=BorrowedBookCreate(
+                            user_id=user.id, book_id=book.id
+                        ),
                     )
                     print(f"You have borrowed '{search}'")
                 else:
-                    print(f"Are you sure this '{search}' is a book?")
+                    print(f"Are you sure {search} is a book in the library?")
 
             case "4":  # return a book to the library
-                borrowed = library.borrowed_books
-                for book in borrowed:
+                for book in library.borrowed_books:
                     print(f"{book.id} - {book.title}")
 
                 return_book = int(
@@ -172,7 +172,7 @@ def view_library(user: UserSchema):
                 remove_borrowed_book(
                     db=db,
                     borrowed_book=BorrowedBookCreate(
-                        user_id=user.id, book_id=return_book
+                        book_id=return_book, user_id=user.id
                     ),
                 )
                 print(f"Book with id {return_book} has been returned!")
@@ -248,7 +248,11 @@ def view_library_as_admin(admin: Admin):
                     db=db, user=AdminCreate(username=username, password=password)
                 )
             case "2":
-                print(f"\nLoading Book Catalog:\n{library.books}")
+                for book in library.books:
+                    print(
+                        f"Book Name: {book.title}\nPages: {book.pagecount}\nBlub: {book.description}\n\n"
+                    )
+
             case "3":
                 print(f"\nThese books have been Borrowed:\n{library.borrowed_books}")
             case "4":
