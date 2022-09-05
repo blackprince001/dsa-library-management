@@ -3,16 +3,19 @@
 This repo serves as a presentation demo for my end of semester Data Structures & Algorithms class Project. All future commits will only contain the relevant additions to scale this to a working GUI application. If you want to contribute to that, make a pull request, and let's create magic.
 
 # Structure of Database
-Needs to be updated!
-![database structure](assets/database_structure.jpg) 
+
+![database structure](assets/database_structure.jpg)
+
+This may or may not have been updated during the course of project implementation.
 
 ### Structure of the project
 
 ```bash
 
 .
+├── assets
+│   └── database_structure.jpg
 ├── books.json
-├── library.db
 ├── manager
 │   ├── database
 │   │   ├── core.py
@@ -50,7 +53,7 @@ Needs to be updated!
     │   └── test_load_book_metadata.py
     └── __init__.py
 
-7 directories, 31 files
+8 directories, 31 files
 
 ```
 
