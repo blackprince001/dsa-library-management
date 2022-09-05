@@ -13,9 +13,11 @@ This may or may not have been updated during the course of project implementatio
 ```bash
 
 .
+├── app.py
 ├── assets
 │   └── database_structure.jpg
 ├── books.json
+├── library.db
 ├── manager
 │   ├── database
 │   │   ├── core.py
@@ -53,7 +55,7 @@ This may or may not have been updated during the course of project implementatio
     │   └── test_load_book_metadata.py
     └── __init__.py
 
-8 directories, 31 files
+8 directories, 33 files
 
 ```
 
