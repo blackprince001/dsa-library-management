@@ -36,9 +36,14 @@ def remove_borrowed_book(db: Session, borrowed_book: BorrowedBookSchema) -> None
 
 def get_borrowed_books_admin(db: Session) -> list[BorrowedBookModel] | list:
     """Returns a list of books borrowed from the library."""
-    return db.scalars(
+    borrowed_books = db.scalars(
         select(BorrowedBookModel).where(BorrowedBookModel is not None)
     ).all()
+
+    return [
+        f"Book id: {borrowed_book.book_id} borrowed by User id:{borrowed_book.user_id}"
+        for borrowed_book in borrowed_books
+    ]
 
 
 def get_user_by_id(db: Session, user_id: int) -> UserModel | None:
