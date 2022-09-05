@@ -48,7 +48,6 @@ class BorrowedBook(Base):
 
     __tablename__ = "borrowed_book"
 
-    id = Column(Integer, primary_key=True)
     book_id = Column(ForeignKey("book.id"), primary_key=True)
     user_id = Column(ForeignKey("user.id"), primary_key=True)
 
