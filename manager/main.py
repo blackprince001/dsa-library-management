@@ -217,16 +217,16 @@ def view_library(user: UserSchema):
 def view_library_as_admin(admin: Admin):
     db = get_db()
 
-    library = Library(
-        admins=get_admins(db=db),
-        users=get_users(db=db),
-        books=get_books(db=db),
-        borrowed_books=get_borrowed_books_admin(db=db),
-    )
-
     print(f"\nHello, admin: {admin.username}\n")
 
     while True:
+
+        library = Library(
+            admins=get_admins(db=db),
+            users=get_users(db=db),
+            books=get_books(db=db),
+            borrowed_books=get_borrowed_books_admin(db=db),
+        )
 
         options = "\n".join(
             (
@@ -252,6 +252,7 @@ def view_library_as_admin(admin: Admin):
                 create_user(
                     db=db, user=AdminCreate(username=username, password=password)
                 )
+                print("\n")
             case "2":
                 for book in library.books:
                     print(
@@ -259,7 +260,8 @@ def view_library_as_admin(admin: Admin):
                     )
 
             case "3":
-                print(f"\nThese books have been Borrowed:\n{library.borrowed_books}")
+                for borrowed_book in library.borrowed_books:
+                    print(f"{borrowed_book}\n")
             case "4":
                 show_main_menu()
             case _:
@@ -341,8 +343,7 @@ def show_main_menu():
                 show_main_menu()
 
 
-if __name__ == "__main__":
-
+def app():
     d_create_admins()
     d_load_books()
     show_main_menu()
