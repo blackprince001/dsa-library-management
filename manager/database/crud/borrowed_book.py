@@ -9,7 +9,7 @@ from ..schemas.book import BorrowedBookCreate
 
 
 def create_borrowed_book(db: Session, borrow_book: BorrowedBookCreate) -> BorrowedBookModel:
-    """Creates a book and adds the Book to the BorrowedBook Table Database."""
+    """Creates a borrowed book and records the Book to the BorrowedBook Table Database."""
     db_borrowed_book = BorrowedBookModel(**borrow_book.dict())
 
     db.add(db_borrowed_book)
