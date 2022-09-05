@@ -3,29 +3,35 @@ from sqlalchemy.orm import Session
 
 from ..models import (
     BorrowedBook as BorrowedBookModel,
+    BorrowedBook as BorrowedBookSchema,
     User as UserModel,
 )
 from ..schemas.book import BorrowedBookCreate
 
 
-def create_borrowed_book(db: Session, borrow_book: BorrowedBookCreate) -> BorrowedBookModel:
+def create_borrowed_book(
+    db: Session, borrow_book: BorrowedBookCreate
+) -> BorrowedBookModel:
     """Creates a borrowed book and records the Book to the BorrowedBook Table Database."""
     db_borrowed_book = BorrowedBookModel(**borrow_book.dict())
 
     db.add(db_borrowed_book)
     db.commit()
-    db.refresh()
+    db.refresh(db_borrowed_book)
 
     return db_borrowed_book
 
 
-def remove_borrowed_book(db: Session, borrowed_book: BorrowedBookCreate) -> None:
+def remove_borrowed_book(db: Session, borrowed_book: BorrowedBookSchema) -> None:
     """Removes a current book from BorrowedBook Table Database."""
-    db_borrowed_book = db.get(BorrowedBookModel, borrowed_book.book_id)
+    db_borrowed_book = db.scalar(
+        select(BorrowedBookModel)
+        .where(BorrowedBookModel.book_id == borrowed_book.book_id)
+        .where(BorrowedBookModel.user_id == borrowed_book.user_id)
+    )
 
     db.delete(db_borrowed_book)
     db.commit()
-    db.refresh()
 
 
 def get_borrowed_books_admin(db: Session) -> list[BorrowedBookModel] | list:
