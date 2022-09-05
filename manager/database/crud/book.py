@@ -43,9 +43,9 @@ def create_book(
     return db_book
 
 
-def get_book_by_name(db: Session, keyword: str) -> list[BookModel] | list:
+def get_book_by_name(db: Session, keyword: str) -> BookModel:
     """Returns a list of Book with Titles that have a specfic @param `keyword` in it."""
-    return db.scalars(select(BookModel).where(keyword in BookModel.title))
+    return db.scalar(select(BookModel).where(BookModel.title == keyword))
 
 
 def get_books(db: Session) -> list[BookModel] | list:
@@ -55,4 +55,4 @@ def get_books(db: Session) -> list[BookModel] | list:
 
 def display_book_content(db: Session, book: BookCreate) -> None:
     """Outputs the data of a book."""
-    print(f"\nBook Name: {book.title}\nPages: {book.pagecount}\nBlub: {book.description}")
+    print(f"Book Name: {book.title}\nPages: {book.pagecount}\nBlub: {book.description}")
