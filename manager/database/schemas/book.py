@@ -32,7 +32,6 @@ class BorrowedBookCreate(BorrowedBookBase):
 
 
 class BorrowedBook(BorrowedBookBase):
-    pass
 
     class Config:
         orm_mode = True
