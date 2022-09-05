@@ -4,7 +4,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from manager.database.crud.author import create_author
-from manager.database.schemas.book import BookCreate, BorrowedBookCreate
+from manager.database.schemas.book import (
+    BookCreate,
+    BorrowedBookCreate,
+    BorrowedBook as BorrowedBookSchema,
+)
 from manager.database.schemas.author import AuthorCreate
 from manager.security import Password
 from manager.database.schemas.users import (
@@ -171,7 +175,7 @@ def view_library(user: UserSchema):
                 )
                 remove_borrowed_book(
                     db=db,
-                    borrowed_book=BorrowedBookCreate(
+                    borrowed_book=BorrowedBookSchema(
                         book_id=return_book, user_id=user.id
                     ),
                 )
@@ -180,7 +184,8 @@ def view_library(user: UserSchema):
             case "5":  # display book blub
                 books = library.books
 
-                # this section might break if the search keyword is not worded right, but I didnt have the time to error check.
+                # this section might break if the search keyword is not worded right, 
+                # but I didnt have the time to error check.
                 search = input("What is the name of the book: ")
                 book_found = None
                 for book in books:
