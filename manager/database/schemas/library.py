@@ -10,3 +10,5 @@ class Library(BaseModel):
 
     borrowed_books: list = []
     books: list = []
+
+    authors: list = []
