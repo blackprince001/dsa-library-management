@@ -2,13 +2,13 @@
 
 This repo serves as a presentation demo for my end of semester Data Structures & Algorithms class Project. All future commits will only contain the relevant additions to scale this to a working GUI application. If you want to contribute to that, make a pull request, and let's create magic.
 
-# Structure of Database
+## Structure of Database
 
 ![database structure](assets/database_structure.jpg)
 
 This may or may not have been updated during the course of project implementation.
 
-### Structure of the project
+## Structure of the project
 
 ```bash
 
@@ -59,18 +59,18 @@ This may or may not have been updated during the course of project implementatio
 
 ```
 
-# Quick Start
+## Quick Start
 
 - Clone the repository
 
     ```bash
-    git clone https://github.com/blackprince001/dsa-library-management
+    git clone https://github.com/blackprince001/library-database-management
     ```
 
 - Move into the directory
 
     ```bash
-    cd dsa-library-management
+    cd library-database-management
     ```
 
 - Set up a virtual environment with [Pipenv](https://pipenv.pypa.io/en/latest/index.html) and install the project dependencies (from the `Pipfile.lock` file to ensure deterministic builds)
@@ -96,6 +96,18 @@ One of the ways to so is to put the following code at the very beginning of `man
   ```
 
   while you're in `/dsa-library-management`
+
+## Running the program
+
+After making sure all required dependencies are installed, run the `app.py` in the parent directory of this repository. This should provide a terminal interface of the Database API capabilities to future work.
+
+  ```python
+  python3 app.py
+  ```
+
+## Terminal Interface
+
+![Terminal Interface](assets/Screenshot%20from%202022-09-06%2022-22-00.png)
 
 ### Testing
 
