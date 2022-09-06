@@ -43,9 +43,9 @@ def create_book(
     return db_book
 
 
-def get_book_by_name(db: Session, keyword: str) -> BookModel:
-    """Returns a list of Book with Titles that have a specfic @param `keyword` in it."""
-    return db.scalar(select(BookModel).where(BookModel.title == keyword))
+def get_book_by_id(db: Session, book_id: int) -> BookModel:
+    """Returns a book using it's `id`"""
+    return db.get(BookModel, book_id)
 
 
 def get_books(db: Session) -> list[BookModel] | list:
