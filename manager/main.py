@@ -3,7 +3,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from manager.database.crud.author import create_author
+from manager.database.crud.author import (
+    create_author,
+    get_author_books,
+    get_author_by_id,
+    get_authors,
+)
 from manager.database.schemas.book import (
     BookCreate,
     BorrowedBookCreate,
@@ -20,9 +25,9 @@ from manager.database.schemas.users import (
 from manager.database.schemas.library import Library
 from manager.database.crud.book import (
     create_book,
-    get_book_by_name,
     get_books,
     display_book_content,
+    get_book_by_id,
 )
 from manager.database.models import (
     Base,
@@ -42,7 +47,7 @@ from manager.database.crud.borrowed_book import (
     get_borrowed_books,
     get_borrowed_books_admin,
 )
-from manager.utils.book_metadata_parser import load_metadata
+from manager.utils.book_metadata_parser import METADATA
 from manager.database.core import engine
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -82,11 +87,8 @@ def d_load_books():
         db.get(AuthorModel, 1)
     ):  # check if there are data elements at the top in each Column of Author Table and Book Table
 
-        # assigns the path location for the books.json to @var raw_file
-        raw_file = Path(__file__).resolve().parent.parent / "books.json"
-
         # load the list collection of data tuples into @param `books`
-        books = load_metadata(raw_file)
+        books = METADATA
         for (authors, title, page_count, desc) in books:
             # unpack the tuples to and create Authors and Books.
 
@@ -122,6 +124,7 @@ def view_library(user: UserSchema):
             users=[],
             books=get_books(db=db),
             borrowed_books=get_borrowed_books(db=db, user_id=user.id),
+            authors=get_authors(db=db)
         )
 
         print("\n", "*" * 30)
@@ -131,8 +134,9 @@ def view_library(user: UserSchema):
                 "2. View borrowed books",
                 "3. Borrow a book",
                 "4. Return a book",
-                "5. Read a book",
-                "6. Logout",
+                "5. Search a book",
+                "6. Search an Author",
+                "7. Logout",
             )
         )
 
@@ -141,28 +145,48 @@ def view_library(user: UserSchema):
 
         match choice:
             case "1":  # print all the books in the library
-                for book in library.books:
-                    print(book.title)
+                for ind, book in enumerate(library.books, start=1):
+                    print(f"{ind} - {book.title}")
 
-            case "2":  # prints the books by a user
+            case "2":  # prints the books borrowed by a user
                 print(
-                    f"\nThese are the books you have Borrowed:\n{library.borrowed_books}"
+                    f"\nThese are the books you have Borrowed:\n{','.join([book.title for book in library.borrowed_books])}"
                 )
 
             case "3":  # borrow a book from the library
                 search = input("What is the name of the Book you want Borrow: ")
-                book = get_book_by_name(db=db, keyword=search)
+                books = [book for book in library.books if search in book.title]
 
-                if book:
+                if len(books) == 1:
+                    print(f"Found '{books[0].title}' \nBorrowing Book.")
                     create_borrowed_book(
                         db,
                         borrow_book=BorrowedBookCreate(
-                            user_id=user.id, book_id=book.id
+                            user_id=user.id, book_id=books[0].id
                         ),
                     )
-                    print(f"You have borrowed '{search}'")
+                    print(f"You have borrowed '{books[0].title}'")
+
+                elif len(books) > 1:
+                    print("Did you mean this? ")
+                    for book in books:
+                        print(f"{book.id} - {book.title}")
+
+                    response = int(
+                        input(
+                            "Type the corresponding id of a book if it is suggested above: "
+                        )
+                    )
+                    create_borrowed_book(
+                        db,
+                        borrow_book=BorrowedBookCreate(
+                            user_id=user.id, book_id=response
+                        ),
+                    )
                 else:
-                    print(f"Are you sure {search} is a book in the library?")
+                    print(
+                        f"Book Not Found! Are you sure {search} is a book in the library?"
+                    )
 
             case "4":  # return a book to the library
                 for book in library.borrowed_books:
@@ -181,33 +205,54 @@ def view_library(user: UserSchema):
                 )
                 print(f"Book with id {return_book} has been returned!")
 
-            case "5":  # display book blub
-                books = library.books
+            case "5": # Search for a book
+                search = input("What book do you want to search for: ")
+                results = [book for book in library.books if search in book.title]
 
-                # this section might break if the search keyword is not worded right, 
-                # but I didnt have the time to error check.
-                search = input("What is the name of the book: ")
-                book_found = None
-                for book in books:
-                    if book.title == search:
-                        book_found = book
+                if not results:
+                    print(
+                        f"Book Not Found! Are you sure {search} is a book in the library?"
+                    )
 
-                print("\n\n")
-                display_book_content(db=db, book=book_found)
+                if results:
+                    print(f"Found books with the search '{search}' :\n")
+                    for book in results:
+                        print(f"id: {book.id} title: {book.title}")
 
-            # case "6":
-            #     search = input("What book do you want to search for: ")
-            #     res = get_book_by_name(db, keyword=search)
+                    response = int(
+                        input(
+                            "Type the corresponding id of a book if it is suggested above: "
+                        )
+                    )
 
-            #     if not res:
-            #         print
+                    display_book_content(db, book=get_book_by_id(db, response))
 
-            #     if res:
-            #         print(f"Found books with the search '{search}' :\n")
-            #         for count, book in enumerate(res, start=1):
-            #             print(f"{count} - {book}")
+            case "6": # Search up an Author
+                search = input("Which Author do you want to search for: ")
+                authors = [author for author in library.authors if search in author.name]
 
-            case "6":
+                if not authors:
+                    print(
+                        f"Author Not Found! Are you sure {search} is an Author with books in the library?"
+                    )
+
+                if authors:
+                    print(f"Found Authors with the search '{search}' :\n")
+                    for author in authors:
+                        print(f"id: {author.id} title: {author.name}")
+
+                    response = int(
+                        input(
+                            "Type the corresponding id of an Author if it is suggested above: "
+                        )
+                    )
+                    author = get_author_by_id(db, response)
+                    print(f"Author Name: {author.name}")
+
+                    author_books = get_author_books(db, author.id)
+                    print(f"Author Books: {','.join([book.title for book in author_books])}")
+
+            case "7":
                 show_main_menu()
 
             case _:
@@ -226,6 +271,7 @@ def view_library_as_admin(admin: Admin):
             users=get_users(db=db),
             books=get_books(db=db),
             borrowed_books=get_borrowed_books_admin(db=db),
+            authors=get_authors(db=db)
         )
 
         options = "\n".join(
@@ -233,7 +279,8 @@ def view_library_as_admin(admin: Admin):
                 "1. Create an admin account",
                 "2. View all books",
                 "3. View borrowed books",
-                "4. Logout",
+                "4. View all Authors",
+                "5. Logout",
             )
         )
 
@@ -253,17 +300,24 @@ def view_library_as_admin(admin: Admin):
                     db=db, user=AdminCreate(username=username, password=password)
                 )
                 print("\n")
+
             case "2":
                 for book in library.books:
                     print(
-                        f"Book Name: {book.title}\nPages: {book.pagecount}\nBlub: {book.description}\n\n"
+                        f"Book Name: {book.title}\nPages: {book.pagecount}\nBlub: {book.description}\n"
                     )
 
             case "3":
-                for borrowed_book in library.borrowed_books:
-                    print(f"{borrowed_book}\n")
+                print(f"{','.join([book.title for book in library.borrowed_books])}")
+
             case "4":
+                authors = {author for author in library.authors}
+                for name in authors:
+                    print(name)
+
+            case "5":
                 show_main_menu()
+
             case _:
                 print("Invalid entry, try again!")
 
