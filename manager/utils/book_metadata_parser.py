@@ -1,5 +1,5 @@
 import json
-
+from pathlib import Path
 
 def load_metadata(filename):
     """Returns a list collection of tuples packed with scraped data from a filename."""
@@ -33,3 +33,8 @@ def load_metadata(filename):
             )
 
     return books
+
+
+# assigns the path location for the books.json to @var raw_file
+raw_file = Path(__file__).resolve().parent.parent.parent / "books.json"
+METADATA = load_metadata(raw_file)
