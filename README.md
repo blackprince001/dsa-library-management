@@ -107,7 +107,7 @@ After making sure all required dependencies are installed, run the `app.py` in t
 
 ## Terminal Interface
 
-![Terminal Interface](assets/Screenshot%20from%202022-09-06%2022-22-00.png)
+![Terminal Interface](assets/screenshot.png)
 
 ### Testing
 
