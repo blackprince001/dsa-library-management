@@ -44,7 +44,7 @@ from manager.database.crud.user import (
 from manager.database.crud.borrowed_book import (
     create_borrowed_book,
     remove_borrowed_book,
-    get_borrowed_books,
+    get_borrowed_books_user,
     get_borrowed_books_admin,
 )
 from manager.utils.book_metadata_parser import METADATA
@@ -123,7 +123,7 @@ def view_library(user: UserSchema):
             admins=[],
             users=[],
             books=get_books(db=db),
-            borrowed_books=get_borrowed_books(db=db, user_id=user.id),
+            borrowed_books=get_borrowed_books_user(db=db, user_id=user.id),
             authors=get_authors(db=db)
         )
 
@@ -312,8 +312,8 @@ def view_library_as_admin(admin: Admin):
 
             case "4":
                 authors = {author for author in library.authors}
-                for name in authors:
-                    print(name)
+                for author in authors:
+                    print(author.name)
 
             case "5":
                 show_main_menu()
@@ -398,6 +398,11 @@ def show_main_menu():
 
 
 def app():
-    d_create_admins()
-    d_load_books()
+    # Uncomment this function if you want to create default admins for the database
+    # d_create_admins()
+
+    # Uncomment this function if you want to scrap and add books to the database
+    # d_load_books()
+    
+    # Runs main program
     show_main_menu()
