@@ -51,7 +51,7 @@ def get_user_by_id(db: Session, user_id: int) -> UserModel | None:
     return db.get(UserModel, user_id)
 
 
-def get_borrowed_books(db: Session, user_id: int):
+def get_borrowed_books_user(db: Session, user_id: int):
     """Returns a list of books borrowed by a specific User."""
     user = get_user_by_id(db, user_id)
 
