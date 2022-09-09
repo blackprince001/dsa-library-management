@@ -1,7 +1,7 @@
 from manager.database.crud.borrowed_book import (
     create_borrowed_book,
     remove_borrowed_book,
-    get_borrowed_books,
+    get_borrowed_books_user,
     get_borrowed_books_admin,
 )
 from manager.database.crud.book import create_book
