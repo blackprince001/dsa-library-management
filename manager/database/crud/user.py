@@ -20,11 +20,6 @@ def create_user(db: Session, user: UserCreate) -> UserModel:
     return db_user
 
 
-def remove_user(db: Session, user: UserCreate) -> None:
-    # yet to be implemented. should server to remove history of users or user from database.
-    pass
-
-
 def get_users(db: Session) -> list[UserModel] | list:
     """Returns all users who are not admins."""
     return db.scalars(select(UserModel).where(UserModel.is_admin == False)).all()
